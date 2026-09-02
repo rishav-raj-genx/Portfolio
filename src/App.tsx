@@ -7,50 +7,54 @@ import SplineScene from './SplineScene';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
-  const container = useRef(null);
+  const container = useRef<HTMLDivElement>(null);
 
-  function onLoad(spline) {
-    const drop1 = spline.findObjectByName('Droplet 1');
-    const drop2 = spline.findObjectByName('Droplet 2');
-    const drop3 = spline.findObjectByName('Droplet 3');
-    const sprout = spline.findObjectByName('Sprout');
-    const bigTree = spline.findObjectByName('BigTree');
+  function onLoad(spline: any) {
+    try {
+      const drop1 = spline.findObjectByName('Droplet 1');
+      const drop2 = spline.findObjectByName('Droplet 2');
+      const drop3 = spline.findObjectByName('Droplet 3');
+      const sprout = spline.findObjectByName('Sprout');
+      const bigTree = spline.findObjectByName('BigTree');
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1,
-      }
-    });
-
-    if (drop1 && drop2 && drop3) {
-      tl.to(drop1.position, { y: drop1.position.y - 400, duration: 1 }, 0);
-      tl.to(drop2.position, { y: drop2.position.y - 400, duration: 1 }, 0.2);
-      tl.to(drop3.position, { y: drop3.position.y - 400, duration: 1 }, 0.4);
-    }
-
-    if (sprout && bigTree) {
-      tl.to(sprout.scale, { x: 0, y: 0, z: 0, duration: 0.5 }, 1.5);
-      tl.to(bigTree.scale, { x: 1, y: 1, z: 1, duration: 1 }, 1.5);
-    }
-
-    gsap.utils.toArray('.story-text').forEach((text) => {
-      gsap.fromTo(text,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          scrollTrigger: {
-            trigger: text,
-            start: "top center",
-            end: "bottom center",
-            scrub: true
-          }
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
         }
-      );
-    });
+      });
+
+      if (drop1?.position && drop2?.position && drop3?.position) {
+        tl.to(drop1.position, { y: drop1.position.y - 400, duration: 1 }, 0);
+        tl.to(drop2.position, { y: drop2.position.y - 400, duration: 1 }, 0.2);
+        tl.to(drop3.position, { y: drop3.position.y - 400, duration: 1 }, 0.4);
+      }
+
+      if (sprout?.scale && bigTree?.scale) {
+        tl.to(sprout.scale, { x: 0, y: 0, z: 0, duration: 0.5 }, 1.5);
+        tl.to(bigTree.scale, { x: 1, y: 1, z: 1, duration: 1 }, 1.5);
+      }
+
+      gsap.utils.toArray<HTMLElement>('.story-text').forEach((text) => {
+        gsap.fromTo(text,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            scrollTrigger: {
+              trigger: text,
+              start: "top center",
+              end: "bottom center",
+              scrub: true
+            }
+          }
+        );
+      });
+    } catch (err) {
+      console.error("Spline animation setup error:", err);
+    }
   }
 
   return (
