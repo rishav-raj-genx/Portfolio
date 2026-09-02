@@ -2,14 +2,16 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 export default function CustomCursor() {
-    const cursorDotRef = useRef(null);
-    const cursorFollowerRef = useRef(null);
+    // Added <HTMLDivElement> so TypeScript knows what these refs point to
+    const cursorDotRef = useRef<HTMLDivElement>(null);
+    const cursorFollowerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // Hide the default system cursor globally
         document.body.style.cursor = 'none';
 
-        const onMouseMove = (e) => {
+        // Typed the event 'e' as a MouseEvent
+        const onMouseMove = (e: MouseEvent) => {
             const { clientX, clientY } = e;
 
             // Main tiny dot follows mouse exactly
@@ -30,6 +32,8 @@ export default function CustomCursor() {
         };
 
         window.addEventListener('mousemove', onMouseMove);
+
+        // Cleanup function
         return () => window.removeEventListener('mousemove', onMouseMove);
     }, []);
 
@@ -52,7 +56,7 @@ export default function CustomCursor() {
                     position: 'fixed', top: 0, left: 0, width: '40px', height: '40px',
                     border: '1px solid rgba(0, 191, 255, 0.5)', borderRadius: '50%',
                     pointerEvents: 'none', transform: 'translate(-50%, -50%)', zIndex: 9998,
-                    mixBlendMode: 'screen' // Makes it glow and interact with elements behind it
+                    mixBlendMode: 'screen'
                 }}
             />
         </>
